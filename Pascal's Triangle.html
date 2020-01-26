@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pascal's Triangle</title>
+    <style>
+        canvas {
+            border:1px solid #000000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="triangle" width="1200" height="650"></canvas>
+    <script>
+        function pascal(r) {
+            let p = [];
+            let n = [];
+            if (r == 1) {
+                n.push(1);
+                p.push(n);
+                return p;
+            } else if (r == 2) {
+                p = pascal(r - 1);
+                n.push(1);
+                n.push(1);
+                p.push(n);
+                return p;
+            } else {
+                p = pascal(r - 1);
+                n.push(1);
+                for (let l = 3; l <= r; l++) {
+                    n.push(p[r - 2][l - 3] + p[r - 2][l - 2]);
+                }
+                n.push(1);
+                p.push(n);
+                return p;
+            }
+        }
+        
+        function drawDiamond(c, x, y, s, p) {
+            let hs = s / 2;
+            let w = 10;
+
+            c.moveTo(x, y + w);
+            c.lineTo(x + hs - w, y + hs);
+            c.lineTo(x, y + s - w);
+            c.lineTo(x - hs + w, y + hs);
+            c.lineTo(x, y + w);
+            c.fillStyle = '#0000FF';
+            c.fill();
+            c.beginPath();
+            c.fillStyle = '#FFFFFF';
+            c.fillText(p, x, y + hs);
+        }
+        
+        let lines = 12;
+        let d = pascal(lines);
+        
+        let p = document.getElementById('triangle')
+        let c = p.getContext('2d');
+        c.textAlign = 'center';
+        c.font = '17px Arial';
+        let x, y, size = 100;
+        for (let line = 1; line <= lines; line++) {
+            y = (line - 1) * size / 2;
+            for (let diamond = 1; diamond <= line; diamond++) {
+                x = (lines - line + 1) * size / 2 + (diamond - 1) * size;
+                drawDiamond(c, x, y, size, d[line - 1][diamond - 1]);
+            }
+        }
+    </script>
+</body>
+</html>
